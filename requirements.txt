@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+asyncpg
+python-dotenv
+openai
+psycopg2-binary
+faiss-cpu
+sentence-transformers

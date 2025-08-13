@@ -1,0 +1,5 @@
+.env
+venv
+faiss_job_index.bin
+__pycache__/
+job_metadata.pkl
