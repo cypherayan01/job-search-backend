@@ -6,3 +6,9 @@ openai
 psycopg2-binary
 faiss-cpu
 sentence-transformers
+pytesseract
+pdfplumber
+keybert
+PyMuPDF==1.23.0
+python-docx==0.8.11
+spacy==3.7.0
