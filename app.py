@@ -703,6 +703,7 @@ class CVChatService:
                                 "title": job_data["title"],
                                 "organization_name": complete_job.get("organization_name", ""),
                                 "match_percentage": job_data["match_percentage"],
+                                "description":complete_job.get("description", ""),
                                 "statename": complete_job.get("statename", ""),
                                 "districtname": complete_job.get("districtname", ""),
                                 "avewage": complete_job.get("avewage", 0),
@@ -752,7 +753,7 @@ class CVChatService:
         
         try:
             # Handle more jobs request
-            if any(word in message for word in ["more jobs", "show more", "additional", "other jobs"]):
+            if any(word in message for word in [" Show more jobs", "show more", "additional", "other jobs"]):
                 skills_text = " ".join(cv_profile.skills[:10])
                 skills_embedding = await embedding_service.get_embedding(skills_text)
                 similar_jobs = await vector_store.search_similar_jobs(skills_embedding, top_k=25)
@@ -904,16 +905,17 @@ Required format: [{{"ncspjobid": 123, "title": "Job Title", "match_percentage": 
                     {"role": "user", "content": prompt}
                 ],
                 temperature=0.1,
-                max_tokens=2000
+                max_tokens=4000
             )
             
             content = response.choices[0].message.content.strip()
             
             # Clean response
             content = re.sub(r'```json\s*', '', content)
-            content = re.sub(r'\s*```', '', content)
+            content = re.sub(r'```\s*', '', content)
+            content = re.sub(r'^[^[]*', '', content)  # Remove text before JSON array
+            content = re.sub(r'[^}]*$', '}]', content)  # Ensure proper JSON ending
             content = content.strip()
-            
             try:
                 ranked_jobs = json.loads(content)
                 if isinstance(ranked_jobs, list) and len(ranked_jobs) > 0:
